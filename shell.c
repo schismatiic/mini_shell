@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int i;
 
 void run_shell(void) {
   char *line = NULL;
@@ -29,6 +33,21 @@ void run_shell(void) {
       printf("help: \n exit       Exit HolySH\n");
     }
     printf("Command: %s\n", line);
+
+    char *command = strtok(
+        line,
+        " "); // fix temporal, hay que usar esta funcion para hacer un array de
+              // strings separados por espacios y pasarselo a los argumentos
+
+    int hijo = fork();
+    // hay que separar los argumentos por espacios y ponerlos en un array de lo
+    // contrario no funca
+    if (hijo == 0) {
+      execlp(command, "", 0);
+      exit(0);
+    } else {
+      wait(NULL);
+    }
   }
   free(line);
 }
