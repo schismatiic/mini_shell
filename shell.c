@@ -2,14 +2,16 @@
 #include "matar.h"
 #include "parser.h"
 #include "process.h"
+#include "memory.h"
 #include "stats.h"
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
-
 
 static void show_prompt(void)
 {
@@ -24,7 +26,7 @@ static void show_prompt(void)
     {
         printf("holysh> "); // Plan B por si falla
     }
-    
+
     fflush(stdout);
 }
 
@@ -41,8 +43,56 @@ static void show_help(void)
     printf("  ls                List directory contents\n");
     printf("  pwd               Print current directory\n");
     printf("  echo Hello        Print a message\n");
+    printf("  mem               Show memory\n");
     printf("\n");
     printf("===========================================\n");
+    printf("\n");
+}
+static void show_memory(char **argumentos)
+{
+    if (argumentos[1] == NULL)
+    {
+        long total = get_total_memory();
+        long available = get_available_memory();
+        if (total == -1 || available == -1)
+        {
+            printf("Error al consultar la memoria del sistema\n");
+            return;
+        }
+        printf("\n");
+        printf("========== Holy † Memory ==========\n");
+        printf("Memoria total: %ld kB\n", total);
+        printf("Memoria disponible: %ld kB\n", available);
+        printf("===================================\n");
+        printf("\n");
+        return;
+    }
+    if (argumentos[2] != NULL)
+    {
+        printf("Uso: mem [PID]\n");
+        return;
+    }
+    char *fin;
+    errno = 0;
+    long numero = strtol(argumentos[1], &fin, 10);
+    if (errno != 0 || fin == argumentos[1] || *fin != '\0' ||
+        numero <= 0 || numero > INT_MAX)
+    {
+        printf("PID inválido\n");
+        return;
+    }
+    pid_t pid = (pid_t)numero;
+    long memoria = get_process_memory(pid);
+    if (memoria == -1)
+    {
+        printf("No se pudo consultar la memoria del proceso\n");
+        return;
+    }
+    printf("\n");
+    printf("========== Holy † Process Memory ==========\n");
+    printf("PID: %ld\n", (long)pid);
+    printf("Memoria residente: %ld kB\n", memoria);
+    printf("====================================\n");
     printf("\n");
 }
 // asdlsajdsa
@@ -53,7 +103,7 @@ void run_shell(void)
 
     char dir_inicial[1024]; // arreglo de chars (string?) para guardar la dirección inicial
 
-    if (getcwd(dir_inicial, sizeof(dir_inicial)) == NULL) //esto hace 2 cosas, obtiene la dirección actual con getcwd y lo guarda en dir_inicial especificando el tamaño que requiere y por otro lado se asegura de que se pudo obtener, como recién partió el programa, estamos justo en la direccion que nos importa mantener como inicial o un pseudo home
+    if (getcwd(dir_inicial, sizeof(dir_inicial)) == NULL) // esto hace 2 cosas, obtiene la dirección actual con getcwd y lo guarda en dir_inicial especificando el tamaño que requiere y por otro lado se asegura de que se pudo obtener, como recién partió el programa, estamos justo en la direccion que nos importa mantener como inicial o un pseudo home
     {
         perror("holysh: error al obtener directorio inicial");
     }
@@ -101,7 +151,7 @@ void run_shell(void)
                     perror("holysh: cd");
                 }
             }
-            
+
             continue;
         }
 
@@ -118,7 +168,11 @@ void run_shell(void)
             show_help();
             continue;
         }
-
+        if (strcmp(argumentos[0], "mem") == 0)
+        {
+            show_memory(argumentos);
+            continue;
+        }
         execute_command(argumentos);
     }
     free(line);
