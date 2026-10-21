@@ -12,7 +12,18 @@ int i;
 
 static void show_prompt(void)
 {
-    printf("holysh> ");
+    char cwd[1024]; // Un arreglo para guardar la ruta actual
+
+    // getcwd obtiene la ruta actual y la guarda en 'cwd'
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+    {
+        printf("holysh:%s$ ", cwd); // Muestra la ruta dentro del prompt
+    }
+    else
+    {
+        printf("holysh> "); // Plan B por si falla
+    }
+    
     fflush(stdout);
 }
 
@@ -25,6 +36,14 @@ void run_shell(void)
 {
     char *line = NULL;
     size_t capacity = 0;
+
+    char dir_inicial[1024]; // arreglo de chars (string?) para guardar la dirección inicial
+
+    if (getcwd(dir_inicial, sizeof(dir_inicial)) == NULL) //esto hace 2 cosas, obtiene la dirección actual con getcwd y lo guarda en dir_inicial especificando el tamaño que requiere y por otro lado se asegura de que se pudo obtener, como recién partió el programa, estamos justo en la direccion que nos importa mantener como inicial o un pseudo home
+    {
+        perror("holysh: error al obtener directorio inicial");
+    }
+
     while (1)
     {
         show_prompt();
@@ -49,9 +68,26 @@ void run_shell(void)
             continue; // Si el usuario hace enter, pues pasamos de largo nomas
         }
         argumentos[contador_de_argumentos] = NULL; // Recordar que exec necesita un NULL al final, se lo chantamos aca a lo cerdo
-        if (strcmp(argumentos[0], "cd") == 0)
+        
+        if (strcmp(argumentos[0], "cd") == 0) // si aparece un cd como primer argumento ...
         {
-            // Lo puedo intentar, pero me da flojera ahora, seguire tocando el resto
+            if (argumentos[1] == NULL) // si no hay segundo argumento, (e.i solo "cd") nos vamos al dir_inicial
+            {
+                if (chdir(dir_inicial) != 0)
+                {
+                    perror("holysh: cd");
+                }
+            }
+            else
+            {
+                // Si el usuario escribió "cd [carpeta]", intentamos cambiar a argumentos[1] o [carpeta] altiro
+                if (chdir(argumentos[1]) != 0) // Si el resultado es distinto de 0 (es decir, falló), mostramos el error con perror
+                {
+                    perror("holysh: cd");
+                }
+            }
+            
+            continue;
         }
 
         // line[strcspn(line, "\n")] = '\0'; // strtok ya elimina el salto de linea
