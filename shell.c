@@ -44,6 +44,7 @@ static void show_help(void)
     printf("  pwd               Print current directory\n");
     printf("  echo Hello        Print a message\n");
     printf("  mem               Show memory\n");
+    printf("  mem [PID]         Show process memory\n");
     printf("\n");
     printf("===========================================\n");
     printf("\n");
