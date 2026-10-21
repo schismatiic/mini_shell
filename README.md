@@ -31,4 +31,11 @@
     - `exit`: termina la shel liberando recursos y mostraodn un resumen final de memoria.
     - `help` lista de uso.
   - Al salir la shell (exit), mostrar un resumen respecto a los procesos ejecutados y la memoria utilizada.
-  
+ 
+## Documentacion
+ 
+### main.c
+- Simplemene ejecuta la terminal.
+
+### shell.c
+- Ejecuta las funciones propias de la sell, no depende de procesos externos y orquesta

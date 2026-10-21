@@ -10,7 +10,6 @@
 #include <time.h>
 #include <unistd.h>
 
-int i;
 
 static void show_prompt(void)
 {
@@ -37,6 +36,7 @@ static void show_help(void)
     printf("\n");
     printf("  help              Show the help message\n");
     printf("  exit              Exit HolySH\n");
+    printf("  cd                Change Directory\n");
     printf("\n");
     printf("  ls                List directory contents\n");
     printf("  pwd               Print current directory\n");
