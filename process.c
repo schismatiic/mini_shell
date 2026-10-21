@@ -44,5 +44,7 @@ void execute_command(char **argumentos) {
       perror("waitpid failed");
       return;
     }
+  } else {
+    printf("[ %d ] proceso en segundo plano\n", hijo);
   }
 }
