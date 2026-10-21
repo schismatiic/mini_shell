@@ -2,6 +2,7 @@
 #include "matar.h"
 #include "parser.h"
 #include "process.h"
+#include "stats.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,7 +22,7 @@ static void show_help(void)
 {
     printf("help: \n exit       Exit HolySH\n");
     printf("\n");
-    printf("=============== Holy Help ===============\n");
+    printf("=============== Holy † Help ===============\n");
     printf("\n");
     printf("  help              Show the help message\n");
     printf("  exit              Exit HolySH\n");
@@ -75,6 +76,7 @@ void run_shell(void)
             0) // strcmp() devolverá 0 si las dos cadenas son iguales. En ese caso,
                // el bucle se detiene
         {
+            show_stats();
             break;
         }
         if (strcmp(argumentos[0], "help") == 0)

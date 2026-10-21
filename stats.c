@@ -24,7 +24,7 @@ void register_process(pid_t pid, long memory_kb)
 void show_stats(void)
 {
     printf("\n");
-    printf("========== Holy Stats + ==========\n"); // Amén
+    printf("========== Holy † Stats ==========\n"); // Amén
     printf("Procesos registrados: %d\n", total_processes);
     printf("Memoria acumulada: %ld kB\n", total_memory);
     printf("=======================================\n");
