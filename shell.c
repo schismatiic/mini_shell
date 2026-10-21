@@ -38,14 +38,11 @@ void run_shell(void) {
     char *argumentos[128]; // Supongamos que nadie pone mas de 128 argumentos
                            // Hola profe son las 12:32AM
 
-    int contador_de_argumentos = parse_command(line, argumentos);
+    int contador_de_argumentos = parse_command(line, argumentos, 128);
 
     if (contador_de_argumentos == 0) {
       continue; // Si el usuario hace enter, pues pasamos de largo nomas
     }
-    argumentos[contador_de_argumentos] =
-        NULL; // Recordar que exec necesita un NULL al final, se lo chantamos
-              // aca a lo cerdo
     if (strcmp(argumentos[0], "cd") == 0) {
       // Lo puedo intentar, pero me da flojera ahora, seguire tocando el resto
     }
