@@ -1,11 +1,18 @@
+#define _DEFAULT_SOURCE
+#include "matar.h"
+#include "stats.h"
 #include <stdio.h>
+#include <sys/resource.h>
 #include <sys/wait.h>
 
-void matar_hijos(void) {
+void matar_hijos(void)
+{
   int estado;
   pid_t pid;
+  struct rusage uso;
 
-  while ((pid = waitpid(-1, &estado, WNOHANG)) > 0) {
-    printf("[ %d ] proceso terminado\n", pid);
+  while ((pid = wait4(-1, &estado, WNOHANG, &uso)) > 0)
+  {
+    register_process(pid, uso.ru_maxrss);
   }
 }
