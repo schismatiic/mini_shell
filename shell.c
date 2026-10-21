@@ -120,7 +120,8 @@ void run_shell(void)
 
         if (bytes == -1) // getline() da -1 en caso de error
         {
-            break;
+          show_stats();
+          break;
         }
 
         char *argumentos[128]; // Supongamos que nadie pone mas de 128 argumentos
@@ -132,9 +133,6 @@ void run_shell(void)
         {
             continue; // Si el usuario hace enter, pues pasamos de largo nomas
         }
-        argumentos[contador_de_argumentos] =
-            NULL; // Recordar que exec necesita un NULL al final, se lo chantamos
-                  // aca a lo cerdo
         if (strcmp(argumentos[0], "cd") == 0)
         {
             if (argumentos[1] == NULL) // si no hay segundo argumento, (e.i solo "cd") nos vamos al dir_inicial
