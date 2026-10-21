@@ -9,7 +9,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Wno-implicit-function-declaration -std=c11 # Esta variable contiene las opciones que se le pasan al compilador
 
 TARGET = minishell
-SRCS = main.c shell.c parser.c process.c
+SRCS = main.c shell.c parser.c process.c matar.c
 
 # all compila y clean elimina el ejecutable
 all:
