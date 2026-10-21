@@ -18,7 +18,18 @@ static void show_prompt(void)
 
 static void show_help(void)
 {
-    printf("help: \n exit       Exit HolySH\n");
+    printf("\n");
+    printf("=============== HolySH Help ===============\n");
+    printf("\n");
+    printf("  help              Show the help message\n");
+    printf("  exit              Exit HolySH\n");
+    printf("\n");
+    printf("  ls                List directory contents\n");
+    printf("  pwd               Print current directory\n");
+    printf("  echo Hello        Print a message\n");
+    printf("\n");
+    printf("===========================================\n");
+    printf("\n");
 }
 // asdlsajdsa
 void run_shell(void)
@@ -64,6 +75,7 @@ void run_shell(void)
         if (strcmp(argumentos[0], "help") == 0)
         {
             show_help();
+            continue;
         }
 
         execute_command(argumentos);
